@@ -1,0 +1,204 @@
+<mxfile host="Electron">
+  <diagram name="ER híbrido del gimnasio" id="p1">
+    <mxGraphModel dx="1485" dy="1079" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1700" pageHeight="970" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="c2" parent="1" style="text;fontSize=20;fontStyle=1;align=left;html=1;strokeColor=none;fillColor=none;" value="Modelo ER híbrido del gimnasio" vertex="1">
+          <mxGeometry height="36" width="450" x="260" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="c3" parent="1" style="rounded=1;arcSize=2;verticalAlign=top;fontStyle=1;fontSize=14;align=left;spacingLeft=10;dashed=0;html=1;" value="PostgreSQL" vertex="1">
+          <mxGeometry height="795" width="535" x="150" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="c4" parent="1" style="rounded=1;arcSize=2;verticalAlign=top;fontStyle=1;fontSize=14;align=left;spacingLeft=10;dashed=0;html=1;" value="MongoDB" vertex="1">
+          <mxGeometry height="795" width="565" x="970" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="u1" parent="1" style="swimlane;fontStyle=1;startSize=30;horizontal=1;collapsible=0;swimlaneFillColor=#ffffff;html=1;fontSize=13;fillColor=#e1d5e7;strokeColor=#9673a6;" value="User" vertex="1">
+          <mxGeometry height="150" width="410" x="235" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="u2" parent="u1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="id  SERIAL  PK" vertex="1">
+          <mxGeometry height="24" width="410" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="u3" parent="u1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="name  TEXT  NOT NULL" vertex="1">
+          <mxGeometry height="24" width="410" y="54" as="geometry" />
+        </mxCell>
+        <mxCell id="u4" parent="u1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="email  TEXT  NOT NULL  UNIQUE" vertex="1">
+          <mxGeometry height="24" width="410" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="u5" parent="u1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="password  TEXT  NOT NULL" vertex="1">
+          <mxGeometry height="24" width="410" y="102" as="geometry" />
+        </mxCell>
+        <mxCell id="u6" parent="u1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="role  Role  NOT NULL  (ADMIN, USER)" vertex="1">
+          <mxGeometry height="24" width="410" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="i1" parent="1" style="swimlane;fontStyle=1;startSize=30;horizontal=1;collapsible=0;swimlaneFillColor=#ffffff;html=1;fontSize=13;fillColor=#e1d5e7;strokeColor=#9673a6;" value="Inscripcion" vertex="1">
+          <mxGeometry height="198" width="410" x="235" y="575" as="geometry" />
+        </mxCell>
+        <mxCell id="i2" parent="i1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="id  SERIAL  PK" vertex="1">
+          <mxGeometry height="24" width="410" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="i3" parent="i1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="userId  INT  FK → User.id" vertex="1">
+          <mxGeometry height="24" width="410" y="54" as="geometry" />
+        </mxCell>
+        <mxCell id="i4" parent="i1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="claseId  CHAR(24)  FK compuesta" vertex="1">
+          <mxGeometry height="24" width="410" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="i5" parent="i1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="horarioId  CHAR(24)  FK compuesta" vertex="1">
+          <mxGeometry height="24" width="410" y="102" as="geometry" />
+        </mxCell>
+        <mxCell id="i6" parent="i1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="fechaSesion  DATE  FK compuesta" vertex="1">
+          <mxGeometry height="24" width="410" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="i7" parent="i1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="estado  VARCHAR(12)" vertex="1">
+          <mxGeometry height="24" width="410" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="i8" parent="i1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="creadaEn  TIMESTAMPTZ" vertex="1">
+          <mxGeometry height="24" width="410" y="174" as="geometry" />
+        </mxCell>
+        <mxCell id="s1" parent="1" style="swimlane;fontStyle=1;startSize=30;horizontal=1;collapsible=0;swimlaneFillColor=#ffffff;html=1;fontSize=13;fillColor=#e1d5e7;strokeColor=#9673a6;" value="CupoSesion" vertex="1">
+          <mxGeometry height="174" width="410" x="235" y="328" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" parent="s1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="claseId  CHAR(24)  PK → Clase._id" vertex="1">
+          <mxGeometry height="24" width="410" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" parent="s1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="horarioId  CHAR(24)  PK → horarios[]._id" vertex="1">
+          <mxGeometry height="24" width="410" y="54" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" parent="s1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="fechaSesion  DATE  PK" vertex="1">
+          <mxGeometry height="24" width="410" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="s5" parent="s1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="cupoMax  INT  copia de horarios[].cupoMax" vertex="1">
+          <mxGeometry height="24" width="410" y="102" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" parent="s1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="cupoOcupado  INT  DEFAULT 0" vertex="1">
+          <mxGeometry height="24" width="410" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" parent="s1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="CHECK (cupoOcupado BETWEEN 0 AND cupoMax)" vertex="1">
+          <mxGeometry height="24" width="410" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="k1" parent="1" style="swimlane;fontStyle=1;startSize=30;horizontal=1;collapsible=0;swimlaneFillColor=#ffffff;html=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" value="Clase (colección clases)" vertex="1">
+          <mxGeometry height="198" width="460" x="1000" y="120" as="geometry" />
+        </mxCell>
+        <mxCell id="k2" parent="k1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="_id  ObjectId" vertex="1">
+          <mxGeometry height="24" width="460" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="k3" parent="k1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="nombre  string" vertex="1">
+          <mxGeometry height="24" width="460" y="54" as="geometry" />
+        </mxCell>
+        <mxCell id="k4" parent="k1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="descripcion  string" vertex="1">
+          <mxGeometry height="24" width="460" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="k5" parent="k1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="nivel  string" vertex="1">
+          <mxGeometry height="24" width="460" y="102" as="geometry" />
+        </mxCell>
+        <mxCell id="k6" parent="k1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="instructor  string" vertex="1">
+          <mxGeometry height="24" width="460" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="k7" parent="k1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="activa  bool" vertex="1">
+          <mxGeometry height="24" width="460" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="k8" parent="k1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="horarios  [Horario]  embebido" vertex="1">
+          <mxGeometry height="24" width="460" y="174" as="geometry" />
+        </mxCell>
+        <mxCell id="h1" parent="1" style="swimlane;fontStyle=1;startSize=30;horizontal=1;collapsible=0;swimlaneFillColor=#ffffff;html=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" value="Horario (embebido en Clase)" vertex="1">
+          <mxGeometry height="246" width="400" x="1030" y="356" as="geometry" />
+        </mxCell>
+        <mxCell id="h2" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="_id  ObjectId" vertex="1">
+          <mxGeometry height="24" width="400" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="h3" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="diaSemana  string" vertex="1">
+          <mxGeometry height="24" width="400" y="54" as="geometry" />
+        </mxCell>
+        <mxCell id="h4" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="horaInicio  string  (HH:mm)" vertex="1">
+          <mxGeometry height="24" width="400" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="h5" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="horaFin  string  (HH:mm)" vertex="1">
+          <mxGeometry height="24" width="400" y="102" as="geometry" />
+        </mxCell>
+        <mxCell id="h6" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="sala  string" vertex="1">
+          <mxGeometry height="24" width="400" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="h7" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="cupoMax  int" vertex="1">
+          <mxGeometry height="24" width="400" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="h8" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="temporada  string" vertex="1">
+          <mxGeometry height="24" width="400" y="174" as="geometry" />
+        </mxCell>
+        <mxCell id="h9" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="vigenteDesde  date" vertex="1">
+          <mxGeometry height="24" width="400" y="198" as="geometry" />
+        </mxCell>
+        <mxCell id="h10" parent="h1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="vigenteHasta  date" vertex="1">
+          <mxGeometry height="24" width="400" y="222" as="geometry" />
+        </mxCell>
+        <mxCell id="v1" parent="1" style="swimlane;fontStyle=1;startSize=30;horizontal=1;collapsible=0;swimlaneFillColor=#ffffff;html=1;fontSize=13;fillColor=#d5e8d4;strokeColor=#82b366;" value="Valoracion (colección valoraciones)" vertex="1">
+          <mxGeometry height="198" width="460" x="1000" y="645" as="geometry" />
+        </mxCell>
+        <mxCell id="v2" parent="v1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="_id  ObjectId" vertex="1">
+          <mxGeometry height="24" width="460" y="30" as="geometry" />
+        </mxCell>
+        <mxCell id="v3" parent="v1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="inscripcionId  int  UNIQUE → Inscripcion.id" vertex="1">
+          <mxGeometry height="24" width="460" y="54" as="geometry" />
+        </mxCell>
+        <mxCell id="v4" parent="v1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="userId  int  copia → User.id" vertex="1">
+          <mxGeometry height="24" width="460" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="v5" parent="v1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="claseId  ObjectId  copia + ref → Clase._id" vertex="1">
+          <mxGeometry height="24" width="460" y="102" as="geometry" />
+        </mxCell>
+        <mxCell id="v6" parent="v1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="puntuacion  int  (1–5)" vertex="1">
+          <mxGeometry height="24" width="460" y="126" as="geometry" />
+        </mxCell>
+        <mxCell id="v7" parent="v1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="comentario  string  opcional" vertex="1">
+          <mxGeometry height="24" width="460" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="v8" parent="v1" style="text;align=left;verticalAlign=middle;spacingLeft=6;overflow=hidden;rotatable=0;whiteSpace=wrap;html=1;fontFamily=Courier New;fontSize=12;" value="fecha  date" vertex="1">
+          <mxGeometry height="24" width="460" y="174" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="u1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;strokeColor=#404b5a;fontColor=#26313d;startArrow=ERmandOne;endArrow=ERzeroToMany;exitX=0;exitY=0.58;entryX=0;entryY=0.42;" target="i1" value="FK userId">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="190" y="207" />
+              <mxPoint x="190" y="658" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;dashed=1;dashPattern=7 5;strokeColor=#a14b42;fontColor=#8c352f;jumpStyle=arc;jumpSize=8;startArrow=ERzeroToMany;endArrow=ERmandOne;exitX=1;exitY=0.27;entryX=0;entryY=0.62;" target="k1" value="claseId">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="758" y="375" />
+              <mxPoint x="758" y="243" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="i1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;dashed=1;dashPattern=7 5;strokeColor=#a14b42;fontColor=#8c352f;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;endArrow=ERzeroToOne;exitX=1;exitY=0.72;entryX=0;entryY=0.36;" target="v1" value="inscripcionId (único)">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="u1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;dashed=1;dashPattern=7 5;strokeColor=#a14b42;fontColor=#8c352f;jumpStyle=arc;jumpSize=8;startArrow=ERmandOne;endArrow=ERzeroToMany;exitX=1;exitY=0.32;entryX=0;entryY=0.71;" target="v1" value="userId">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="601" y="168" />
+              <mxPoint x="601" y="786" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="k1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;strokeColor=#404b5a;fontColor=#26313d;startArrow=ERmandOne;endArrow=ERzeroToMany;exitX=1;exitY=0.50;entryX=1;entryY=0.50;" target="v1" value="ref claseId">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1500" y="219" />
+              <mxPoint x="1500" y="744" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="k1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;strokeColor=#404b5a;fontColor=#26313d;startArrow=diamondThin;startFill=1;endArrow=ERzeroToMany;exitX=0.50;exitY=1;entryX=0.50;entryY=0;" target="h1" value="horarios[]">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;strokeColor=#404b5a;fontColor=#26313d;startArrow=ERmandOne;endArrow=ERzeroToMany;exitX=0.50;exitY=1;entryX=0.50;entryY=0;" target="i1" value="FK compuesta">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="s1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;strokeWidth=2;fontSize=12;endFill=0;startFill=0;labelBackgroundColor=#ffffff;dashed=1;dashPattern=7 5;strokeColor=#a14b42;fontColor=#8c352f;jumpStyle=arc;jumpSize=8;startArrow=ERzeroToMany;endArrow=ERmandOne;exitX=1;exitY=0.77;entryX=0;entryY=0.43;" target="h1" value="horarioId">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
