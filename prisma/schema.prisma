@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum EstadoInscripcion {
+  ACTIVA
+  CANCELADA
+  ASISTIDA
+  NO_ASISTIO
+}
+
+model User {
+  id            Int           @id @default(autoincrement())
+  name          String
+  email         String        @unique
+  password      String
+  role          Role
+  inscripciones Inscripcion[]
+}
+
+model CupoSesion {
+  claseId       String        @db.Char(24)
+  horarioId     String        @db.Char(24)
+  fechaSesion   DateTime      @db.Date
+  cupoMax       Int
+  cupoOcupado   Int           @default(0)
+  inscripciones Inscripcion[]
+
+  @@id([claseId, horarioId, fechaSesion])
+}
+
+model Inscripcion {
+  id          Int               @id @default(autoincrement())
+  userId      Int
+  claseId     String?           @db.Char(24)
+  horarioId   String            @db.Char(24)
+  fechaSesion DateTime          @db.Date
+  estado      EstadoInscripcion @default(ACTIVA)
+  creadaEn    DateTime          @default(now()) @db.Timestamptz(3)
+  user        User              @relation(fields: [userId], references: [id], onDelete: Restrict)
+  sesion      CupoSesion?       @relation(fields: [claseId, horarioId, fechaSesion], references: [claseId, horarioId, fechaSesion], onDelete: Restrict, onUpdate: Restrict)
+
+  @@index([claseId])
+  @@index([claseId, horarioId, fechaSesion])
+  @@index([userId])
+}

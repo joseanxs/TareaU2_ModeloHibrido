@@ -1,0 +1,29 @@
+{
+  "name": "gimnasio-u2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "API del gimnasio con PostgreSQL y MongoDB",
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node prisma/seed.js"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "7.10.0",
+    "@prisma/client": "7.10.1",
+    "bcryptjs": "3.0.3",
+    "dotenv": "18.0.8",
+    "express": "5.2.1",
+    "jsonwebtoken": "9.0.3",
+    "mongoose": "9.11.4",
+    "pg": "8.23.1",
+    "slugify": "1.6.9",
+    "validator": "13.15.35"
+  },
+  "devDependencies": {
+    "prisma": "7.10.1"
+  }
+}
