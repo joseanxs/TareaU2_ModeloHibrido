@@ -80,7 +80,7 @@ Para inscribir, el servicio toma `userId` del JWT, valida la clase y el horario 
 
 ## 4. ERD híbrido (notación pata de gallo, como el material 2.1)
 
-![ER híbrido del gimnasio. PostgreSQL contiene User, CupoSesion e Inscripcion. MongoDB contiene Clase con horarios embebidos y Valoracion. Las referencias entre motores se dibujan con línea punteada.](gimnasio_er_hibrido.png)
+![ER híbrido del gimnasio. PostgreSQL contiene User, CupoSesion e Inscripcion. MongoDB contiene Clase con horarios embebidos y Valoracion. Las referencias entre motores se dibujan con línea punteada.](evidencias/gimnasio_er_hibrido.png)
 
 [Diagrama en Draw.io](gimnasio_er_hibrido.drawio)
 

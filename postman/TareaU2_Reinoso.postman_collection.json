@@ -1,0 +1,1009 @@
+{
+  "info": {
+    "name": "Tarea U2 · Gimnasio · Reinoso",
+    "description": "Evidencia de la API híbrida del gimnasio. Desde la raíz, inicia Docker Compose y ejecuta `node postman/evidencia.js`. La colección apunta a 127.0.0.1:3100. Usa bases de evidencia separadas, crea los datos de cada ejecución y verifica su eliminación al final.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:3100",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 · Preparar la ejecución",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/_evidencia/preparar"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"Se crea una ejecución temporal con fechas válidas\", function () { const datos = pm.response.json(); pm.expect(datos.id).to.match(/^[a-f0-9-]{36}$/); pm.expect(datos.fechaPasada < datos.fechaFutura).to.equal(true); });",
+              "if (pm.response.code === 201) { Object.entries(pm.response.json()).forEach(([key, value]) => pm.collectionVariables.set(key, value)); pm.collectionVariables.set(\"idInexistente\", \"000000000000000000000000\"); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 · Obtener JWT · Administrador",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{admin}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La respuesta contiene un JWT\", function () { pm.expect(pm.response.json().token).to.match(/^[^.]+\\.[^.]+\\.[^.]+$/); });",
+              "if (pm.response.code === 200) { pm.collectionVariables.set(\"adminJwt\", pm.response.json().token); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 · Registrar socio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{socio}}\",\n  \"password\": \"{{password}}\",\n  \"name\": \"Socio\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"Se crea un socio sin exponer su contraseña\", function () { const cuenta = pm.response.json(); pm.expect(cuenta.role).to.equal(\"USER\"); pm.expect(cuenta).not.to.have.property(\"password\"); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set(\"socioId\", pm.response.json().id); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 · Obtener JWT · Socio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{socio}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La respuesta contiene un JWT\", function () { pm.expect(pm.response.json().token).to.match(/^[^.]+\\.[^.]+\\.[^.]+$/); });",
+              "if (pm.response.code === 200) { pm.collectionVariables.set(\"socioJwt\", pm.response.json().token); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 · Registrar segundo socio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/register",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{otroSocio}}\",\n  \"password\": \"{{password}}\",\n  \"name\": \"Segundo socio\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"Se crea un socio sin exponer su contraseña\", function () { const cuenta = pm.response.json(); pm.expect(cuenta.role).to.equal(\"USER\"); pm.expect(cuenta).not.to.have.property(\"password\"); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set(\"otroSocioId\", pm.response.json().id); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 · Obtener JWT · Segundo socio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/auth/login",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"email\": \"{{otroSocio}}\",\n  \"password\": \"{{password}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La respuesta contiene un JWT\", function () { pm.expect(pm.response.json().token).to.match(/^[^.]+\\.[^.]+\\.[^.]+$/); });",
+              "if (pm.response.code === 200) { pm.collectionVariables.set(\"otroSocioJwt\", pm.response.json().token); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 · Rechazar una clase con horario inválido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/clases",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Fuerza {{id}}\",\n  \"descripcion\": \"Entrenamiento grupal de fuerza.\",\n  \"nivel\": \"BASICO\",\n  \"instructor\": \"{{marca}}\",\n  \"horarios\": [\n    {\n      \"diaSemana\": \"{{diaSemana}}\",\n      \"horaInicio\": \"09:00\",\n      \"horaFin\": \"08:00\",\n      \"sala\": \"Sala 1\",\n      \"cupoMax\": 1,\n      \"temporada\": \"Anual\",\n      \"vigenteDesde\": \"{{fechaPasada}}\",\n      \"vigenteHasta\": \"{{fechaFutura}}\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });",
+              "pm.test(\"La validación de horario responde en español\", function () { pm.expect(pm.response.json().detalles.join(\" \")).to.include(\"posterior\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 · Rechazar la escritura sin rol de administrador",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/clases",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Fuerza {{id}}\",\n  \"descripcion\": \"Entrenamiento grupal de fuerza.\",\n  \"nivel\": \"BASICO\",\n  \"instructor\": \"{{marca}}\",\n  \"horarios\": [\n    {\n      \"diaSemana\": \"{{diaSemana}}\",\n      \"horaInicio\": \"09:00\",\n      \"horaFin\": \"10:00\",\n      \"sala\": \"Sala 1\",\n      \"cupoMax\": 1,\n      \"temporada\": \"Anual\",\n      \"vigenteDesde\": \"{{fechaPasada}}\",\n      \"vigenteHasta\": \"{{fechaFutura}}\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 403\", function () { pm.response.to.have.status(403); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 · Crear clase con horario embebido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/clases",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Fuerza {{id}}\",\n  \"descripcion\": \"Entrenamiento grupal de fuerza.\",\n  \"nivel\": \"BASICO\",\n  \"instructor\": \"{{marca}}\",\n  \"horarios\": [\n    {\n      \"diaSemana\": \"{{diaSemana}}\",\n      \"horaInicio\": \"09:00\",\n      \"horaFin\": \"10:00\",\n      \"sala\": \"Sala 1\",\n      \"cupoMax\": 1,\n      \"temporada\": \"Anual\",\n      \"vigenteDesde\": \"{{fechaPasada}}\",\n      \"vigenteHasta\": \"{{fechaFutura}}\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"La clase tiene horario, slug y ficha virtual\", function () { const clase = pm.response.json(); pm.expect(clase.horarios).to.have.lengthOf(1); pm.expect(clase.slug).to.include(\"fuerza\"); pm.expect(clase.ficha).to.include(\"BASICO\"); });",
+              "if (pm.response.code === 201) { const clase = pm.response.json(); pm.collectionVariables.set(\"claseId\", clase._id); pm.collectionVariables.set(\"horarioId\", clase.horarios[0]._id); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 · Buscar y proyectar el catálogo",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/clases?q={{id}}&fields=nombre,nivel&orden=-nombre"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La búsqueda devuelve la clase con los campos pedidos\", function () { const clases = pm.response.json(); pm.expect(clases).to.have.lengthOf(1); pm.expect(clases[0]).to.have.all.keys(\"_id\", \"nombre\", \"nivel\"); pm.expect(clases[0]._id).to.equal(pm.collectionVariables.get(\"claseId\")); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 · Consultar un ObjectId inválido",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/clases/id-invalido"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 · Consultar una clase inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/clases/{{idInexistente}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 · Actualizar una clase",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/clases/{{claseId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Fuerza mixta {{id}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Guardar recalcula el slug\", function () { pm.expect(pm.response.json().slug).to.include(\"fuerza-mixta\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 · Publicar una sesión",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/sesiones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claseId\": \"{{claseId}}\",\n  \"horarioId\": \"{{horarioId}}\",\n  \"fechaSesion\": \"{{fechaFutura}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"PostgreSQL conserva el id de MongoDB y el cupo\", function () { const sesion = pm.response.json(); pm.expect(sesion.claseId).to.equal(pm.collectionVariables.get(\"claseId\")); pm.expect(sesion.cupoMax).to.equal(1); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "15 · Rechazar una inscripción para una clase inexistente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/inscripciones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claseId\": \"{{idInexistente}}\",\n  \"horarioId\": \"{{horarioId}}\",\n  \"fechaSesion\": \"{{fechaFutura}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "16 · Inscribir al socio en PostgreSQL",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/inscripciones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claseId\": \"{{claseId}}\",\n  \"horarioId\": \"{{horarioId}}\",\n  \"fechaSesion\": \"{{fechaFutura}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"La inscripción está activa y le pertenece al socio\", function () { const inscripcion = pm.response.json(); pm.expect(inscripcion.estado).to.equal(\"ACTIVA\"); pm.expect(inscripcion.userId).to.equal(Number(pm.collectionVariables.get(\"socioId\"))); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set(\"inscripcionId\", pm.response.json().id); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "17 · Rechazar la inscripción sin cupo",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{otroSocioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/inscripciones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claseId\": \"{{claseId}}\",\n  \"horarioId\": \"{{horarioId}}\",\n  \"fechaSesion\": \"{{fechaFutura}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", function () { pm.response.to.have.status(409); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "18 · Unir inscripciones con MongoDB",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/inscripciones"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La inscripción incluye la clase y el horario\", function () { const primera = pm.response.json()[0]; pm.expect(primera.clase._id).to.equal(pm.collectionVariables.get(\"claseId\")); pm.expect(primera.clase.horario.horaInicio).to.equal(\"09:00\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "19 · Cancelar y liberar el cupo",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/inscripciones/{{inscripcionId}}/cancelar"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La inscripción queda cancelada\", function () { pm.expect(pm.response.json().estado).to.equal(\"CANCELADA\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "20 · Preparar una sesión que ya terminó",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/_evidencia/{{id}}/asistencia",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claseId\": \"{{claseId}}\",\n  \"horarioId\": \"{{horarioId}}\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set(\"inscripcionPasadaId\", pm.response.json().inscripcionId); pm.collectionVariables.set(\"asistieron\", JSON.stringify([pm.response.json().inscripcionId])); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "21 · Registrar la asistencia",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/sesiones/asistencia",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"claseId\": \"{{claseId}}\",\n  \"horarioId\": \"{{horarioId}}\",\n  \"fechaSesion\": \"{{fechaPasada}}\",\n  \"asistieron\": {{asistieron}}\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"El socio figura como asistido\", function () { pm.expect(pm.response.json()).to.eql({asistidas: 1, ausentes: 0}); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "22 · Rechazar una valoración sin inscripción",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/valoraciones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"inscripcionId\": 2147483647,\n  \"puntuacion\": 5,\n  \"comentario\": \"Excelente clase.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", function () { pm.response.to.have.status(404); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "23 · Rechazar una valoración de otro socio",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{otroSocioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/valoraciones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"inscripcionId\": \"{{inscripcionPasadaId}}\",\n  \"puntuacion\": 5,\n  \"comentario\": \"Excelente clase.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 403\", function () { pm.response.to.have.status(403); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "24 · Crear valoración con referencia validada",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/valoraciones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"inscripcionId\": \"{{inscripcionPasadaId}}\",\n  \"puntuacion\": 5,\n  \"comentario\": \"Excelente clase.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "pm.test(\"La valoración usa el socio del JWT y la clase de PostgreSQL\", function () { const valoracion = pm.response.json(); pm.expect(valoracion.userId).to.equal(Number(pm.collectionVariables.get(\"socioId\"))); pm.expect(valoracion.claseId).to.equal(pm.collectionVariables.get(\"claseId\")); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "25 · Rechazar una segunda valoración",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{socioJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/valoraciones",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"inscripcionId\": \"{{inscripcionPasadaId}}\",\n  \"puntuacion\": 5,\n  \"comentario\": \"Excelente clase.\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", function () { pm.response.to.have.status(409); });",
+              "pm.test(\"El índice único se traduce a un conflicto\", function () { pm.expect(pm.response.json().error).to.include(\"ya tiene una valoración\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "26 · Consultar el promedio y la referencia populada",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/api/valoraciones?claseId={{claseId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La clase está populada y el promedio es cinco\", function () { const listado = pm.response.json(); pm.expect(listado.resumen).to.eql({total: 1, promedio: 5}); pm.expect(listado.datos[0].claseId._id).to.equal(pm.collectionVariables.get(\"claseId\")); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "27 · Bloquear el borrado de una clase con historial",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/clases/{{claseId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 409\", function () { pm.response.to.have.status(409); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "28 · Crear una clase sin referencias",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/clases",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"nombre\": \"Clase libre {{id}}\",\n  \"descripcion\": \"Entrenamiento grupal de fuerza.\",\n  \"nivel\": \"BASICO\",\n  \"instructor\": \"{{marca}}\",\n  \"horarios\": []\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", function () { pm.response.to.have.status(201); });",
+              "if (pm.response.code === 201) { pm.collectionVariables.set(\"claseLibreId\", pm.response.json()._id); }"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "29 · Borrar la clase sin referencias",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{adminJwt}}",
+            "type": "text"
+          }
+        ],
+        "url": "{{baseUrl}}/api/clases/{{claseLibreId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", function () { pm.response.to.have.status(204); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "30 · Limpiar y verificar los datos de la ejecución",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{baseUrl}}/_evidencia/{{id}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"La ejecución deja cero datos de prueba\", function () { pm.expect(pm.response.json().restantes).to.eql({clases: 0, valoraciones: 0, inscripciones: 0, sesiones: 0, cuentas: 0}); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
